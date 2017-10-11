@@ -114,13 +114,59 @@
     //use a filter to check element exists in array
     //if it doesn't exist push the element into array
     //return array
+
+
+    //check if array isSorted
+        //
+    //debugger;
+    iterator = iterator || _.identity;
     
     var results = [];
-    _.filter(array, function(element) {
-      if (_.indexOf(results, element) === -1) {
-        results.push(element);
-      }
+
+    // if (array.length > 0){
+    //   results[0] = array[0];
+    //   var newArrForEach = array.slice(1);
+    //   _.each(newArrForEach, function(element){
+    //     if (
+    //         _.every(results, function(ele) {
+    //       iterator(ele) !== iterator(element)
+    //     })) {
+    //       results.push(element);
+    //     } 
+    //   });
+    // }
+      //each element run iterator
+        //check if result of iterator(element) index of === -1
+        // var iterator = function(value) { return value === 1; };
+        // var numbers = [1, 2, 2, 3, 4, 4];
+        //                [true, false, false, false, false,false]
+    var iterArr = [];
+    
+    _.each(array, function(element) {
+      iterArr.push(iterator(element));
     });
+    console.log(iterArr)
+    var obj = {};
+    
+    for (var i = 0; i < iterArr; i++) {
+      if (_.indexOf(iterArr, iterArr[i]) > 0) {
+        obj.iterArr[i] = array[i];
+      }
+    }
+    
+    for (var key in obj) {
+      results.push(obj[key]);
+    }
+    
+    console.log(obj)
+    
+    
+    // _.each(array, function(element) {
+    //   if (_.indexOf(results, element) === -1 ) {
+    //     results.push(element);
+    //   }
+    // })
+    // console.log(results);
     return results;
   };
 
@@ -183,6 +229,27 @@
   //   }); // should be 5, regardless of the iterator function passed in
   //          No accumulator is given so the first element is used.
   _.reduce = function(collection, iterator, accumulator) {
+    // check if accumulator, var noAccumalor = arg.length < 3
+        //if no accumalotr, make accumlator = first element
+              // acc = ele[0]
+            // slice new collection
+            //each(new collection, ele) 
+      // run interator on each element
+
+    iterator = iterator || _.identity;
+    if (arguments.length < 3) {
+      var accumulator = collection[0];
+      var newCollection = collection.slice(1);
+      _.each(newCollection, function(element) {
+        accumulator = iterator(accumulator, element, newCollection);
+      });
+    } else {
+      _.each(collection, function(element) {
+        accumulator = iterator(accumulator, element, collection);
+      });
+    }
+    return accumulator;
+
   };
 
   // Determine if the array or object contains a given value (using `===`).
@@ -201,6 +268,19 @@
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
     // TIP: Try re-using reduce() here.
+    //debugger;
+    iterator = iterator || _.identity;
+
+    return _.reduce(collection, (function(accumulator, element){
+      if (!accumulator){
+        return false;
+      } else if (iterator(element)){
+        return accumulator;
+      } else{
+        accumulator = false;
+        return accumulator;
+      }
+  }(true)));
   };
 
   // Determine whether any of the elements pass a truth test. If no iterator is
@@ -208,7 +288,6 @@
   _.some = function(collection, iterator) {
     // TIP: There's a very clever way to re-use every() here.
   };
-
 
   /**
    * OBJECTS
